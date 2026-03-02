@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalotsavam | Pro Arts Fest System</title>
+    <title>Kalotsavam | Grand Arts Festival</title>
     
-    <!-- Fonts -->
+    <!-- Fonts: Cinematic Serif + Clean Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -56,6 +56,14 @@
             z-index: -2;
         }
 
+        /* Noise Texture Overlay */
+        body::after {
+            content: "";
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZmlsdGVyIGlkPSJnoiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjY1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2cpIiBvcGFjaXR5PSIwLjAzIi8+PC9zdmc+');
+            pointer-events: none; z-index: -1;
+        }
+
         /* --- UTILITIES --- */
         .hidden { display: none !important; }
         .flex { display: flex; }
@@ -78,9 +86,15 @@
             50% { transform: scale(0.95); opacity: 1; }
             75% { transform: scale(1.02); opacity: 0.85; }
         }
+
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
         }
 
         /* --- COMPONENTS --- */
@@ -112,17 +126,27 @@
             overflow: hidden;
             z-index: 1;
         }
+        
+        /* Button Shine Effect */
+        .btn::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+            transform: skewX(-25deg);
+            transition: 0s;
+        }
+        .btn:hover::before { left: 150%; transition: 0.7s ease-in-out; }
+
         .btn:hover {
             background: var(--color-primary);
             color: #000;
             box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
             transform: translateY(-2px);
         }
+        .btn:active { transform: translateY(0); }
+        
         .btn-primary { background: var(--color-primary); color: #000; box-shadow: 0 0 15px rgba(212,175,55,0.3); }
         .btn-danger { border-color: var(--color-danger); color: var(--color-danger); background: rgba(231, 76, 60, 0.05); }
         .btn-danger:hover { background: var(--color-danger); color: white; box-shadow: 0 0 20px rgba(231,76,60,0.4); }
-        .btn-success { border-color: var(--color-success); color: var(--color-success); background: rgba(46, 204, 113, 0.05); }
-        .btn-success:hover { background: var(--color-success); color: white; }
 
         /* Back Button */
         .back-home-btn {
@@ -167,6 +191,17 @@
             box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
         }
 
+        /* Cards */
+        .card {
+            background: var(--color-panel);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-card);
+            position: relative;
+        }
+
         /* --- LAYOUTS --- */
         
         /* Header */
@@ -188,18 +223,6 @@
             text-shadow: 0 0 20px rgba(212,175,55,0.3); 
             letter-spacing: 3px;
         }
-        .db-status {
-            font-size: 0.7rem;
-            color: var(--color-success);
-            border: 1px solid var(--color-success);
-            padding: 2px 8px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-right: 15px;
-        }
-        .db-dot { width: 6px; height: 6px; background: var(--color-success); border-radius: 50%; box-shadow: 0 0 5px var(--color-success); }
 
         /* Auth Screen */
         .auth-container {
@@ -214,11 +237,18 @@
             position: relative;
             animation: fadeInUp 0.8s ease-out;
         }
+        .auth-container::before {
+            content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, var(--color-primary), transparent, var(--color-primary));
+            z-index: -1;
+            border-radius: 14px;
+            opacity: 0.3;
+        }
         .tabs { display: flex; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; color: var(--color-text-muted); transition: 0.3s; font-weight: 700; letter-spacing: 1px; font-size: 0.9rem;}
         .tab.active { color: var(--color-primary); border-bottom: 2px solid var(--color-primary); }
 
-        /* Dashboard Grid */
+        /* Student Dashboard */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 300px 1fr;
@@ -238,8 +268,16 @@
             position: sticky;
             top: 100px;
             box-shadow: 0 0 30px rgba(212,175,55,0.1);
+            position: relative;
+            overflow: hidden;
         }
-        .pass-header { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+        .stage-pass::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        
+        .pass-header { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; margin-bottom: 1.5rem; position: relative; z-index: 1;}
         .slot-counter {
             font-family: var(--font-display);
             font-size: 1.1rem;
@@ -255,9 +293,10 @@
             margin: 8px 0; 
             text-shadow: 0 0 10px rgba(212,175,55,0.3);
         }
+        
         .save-status { margin-top: 1.5rem; font-size: 0.8rem; color: #555; letter-spacing: 1px; }
 
-        /* Event Grid */
+        /* Event Selection Area */
         .event-section { margin-bottom: 4rem; }
         .section-title {
             color: var(--color-text-main);
@@ -268,10 +307,16 @@
             padding-left: 1.5rem;
             text-shadow: 0 0 15px rgba(138, 28, 28, 0.3);
         }
-        .event-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; }
+        
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
         
         .event-card {
             background: rgba(20, 20, 25, 0.6);
+            backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.05);
             padding: 1.5rem;
             cursor: pointer;
@@ -279,50 +324,126 @@
             position: relative;
             overflow: hidden;
             border-radius: 8px;
+            /* Animation applied via inline style for stagger */
             opacity: 0; 
             animation: fadeInUp 0.6s ease-out forwards;
         }
-        .event-card:hover { transform: translateY(-8px); border-color: var(--color-primary); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
-        .event-card.selected { border: 1px solid var(--color-success); background: rgba(46, 204, 113, 0.05); }
+
+        /* Hover Effects */
+        .event-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--color-primary);
+            background: rgba(30, 30, 35, 0.8);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        
+        /* Selected State */
+        .event-card.selected {
+            border: 1px solid var(--color-success);
+            background: rgba(46, 204, 113, 0.05);
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.1);
+        }
         .event-card.selected h4 { color: var(--color-success); }
-        .event-card.selected::after { content: 'SELECTED'; position: absolute; top: 10px; right: 10px; color: var(--color-success); font-family: var(--font-display); font-size: 0.6rem; border: 1px solid var(--color-success); padding: 2px 6px; }
-        .event-card h4 { color: #fff; font-family: var(--font-heading); margin-bottom: 0.8rem; font-size: 1.1rem; }
+        
+        .event-card.selected::after {
+            content: 'SELECTED';
+            position: absolute; top: 10px; right: 10px;
+            color: var(--color-success);
+            font-family: var(--font-display);
+            font-size: 0.6rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border: 1px solid var(--color-success);
+            padding: 2px 6px;
+            border-radius: 2px;
+        }
+
+        .event-card h4 { 
+            color: #fff; 
+            font-family: var(--font-heading); 
+            margin-bottom: 0.8rem; 
+            font-size: 1.1rem; 
+            font-weight: 600;
+        }
         .event-card span { font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 1.5px; }
 
         /* Admin Dashboard */
         .admin-panel { padding: 3rem; animation: fadeInUp 0.6s ease-out; }
         .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 3rem; }
-        .stat-card { background: rgba(20, 20, 25, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); padding: 2rem; border-radius: 8px; transition: 0.3s; }
+        .stat-card { 
+            background: rgba(20, 20, 25, 0.6); 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            padding: 2rem; 
+            border-radius: 8px; 
+            transition: 0.3s;
+        }
         .stat-card:hover { border-color: var(--color-primary); transform: translateY(-3px); }
         .stat-card h3 { font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 0.5rem; font-family: var(--font-body); text-transform: uppercase; letter-spacing: 1px; }
         .stat-card .val { font-size: 2.5rem; color: var(--color-primary); font-family: var(--font-display); text-shadow: 0 0 15px rgba(212,175,55,0.2); }
 
-        .data-table-container { overflow-x: auto; background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 8px; }
+        .data-table-container {
+            overflow-x: auto;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
         table { width: 100%; border-collapse: collapse; min-width: 900px; }
         th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        th { background: rgba(40, 40, 50, 0.5); color: var(--color-primary); font-family: var(--font-display); font-size: 0.8rem; text-transform: uppercase; }
+        th { 
+            background: rgba(40, 40, 50, 0.5); 
+            color: var(--color-primary); 
+            font-family: var(--font-display); 
+            font-size: 0.8rem; 
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
         tr:hover { background: rgba(255,255,255,0.02); }
         
         /* Toast Notification */
         #toast {
             position: fixed; bottom: 40px; right: 40px;
-            background: rgba(20, 20, 25, 0.95); border: 1px solid var(--color-primary);
-            color: #fff; padding: 1rem 2rem; border-radius: 4px;
+            background: rgba(20, 20, 25, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--color-primary);
+            color: #fff; padding: 1rem 2rem;
+            border-radius: 4px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transform: translateY(100px); opacity: 0; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 2000; display: flex; align-items: center; gap: 15px; font-weight: bold;
+            transform: translateY(100px); opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2000;
+            display: flex; align-items: center; gap: 15px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
         }
         #toast.show { transform: translateY(0); opacity: 1; }
         #toast.error { border-color: var(--color-danger); color: #ffcccc; }
-        
-        /* Loader */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s ease; }
-        .lamp-flame { width: 30px; height: 60px; background: radial-gradient(ellipse at bottom, #ffeb3b 0%, #ff9800 60%, transparent 100%); border-radius: 50% 50% 20% 20%; box-shadow: 0 0 50px #ff9800, 0 0 100px #ffeb3b; animation: flicker 3s infinite ease-in-out; margin-bottom: 2rem; }
 
+        /* Loader */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: opacity 1s ease;
+        }
+        .lamp-flame {
+            width: 30px; height: 60px;
+            background: radial-gradient(ellipse at bottom, #ffeb3b 0%, #ff9800 60%, transparent 100%);
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 50px #ff9800, 0 0 100px #ffeb3b;
+            animation: flicker 3s infinite ease-in-out;
+            margin-bottom: 2rem;
+        }
+
+        /* Responsive */
         @media (max-width: 900px) {
             .dashboard-grid { grid-template-columns: 1fr; }
             .stage-pass { position: relative; top: 0; margin-bottom: 3rem; }
             .stats-row { grid-template-columns: 1fr 1fr; }
+            header { padding: 1.5rem; }
         }
     </style>
 </head>
@@ -332,7 +453,7 @@
     <div id="loader">
         <div class="lamp-flame"></div>
         <h2 class="mt-4" style="color: #d4af37; letter-spacing: 6px; font-size: 1.5rem;">KALOTSAVAM</h2>
-        <p style="color: #555; font-size: 0.8rem; letter-spacing: 2px; margin-top: 10px;">INITIALIZING DATABASE ENGINE...</p>
+        <p style="color: #555; font-size: 0.8rem; letter-spacing: 2px; margin-top: 10px;">PREPARING THE STAGE</p>
     </div>
 
     <!-- TOAST NOTIFICATION -->
@@ -343,13 +464,7 @@
 
     <!-- HEADER -->
     <header>
-        <div class="flex items-center">
-            <div class="logo">🎭 KALOTSAVAM</div>
-            <div class="db-status">
-                <div class="db-dot"></div>
-                DB: LOCAL_ACTIVE
-            </div>
-        </div>
+        <div class="logo">🎭 KALOTSAVAM</div>
         <nav>
             <div id="nav-actions">
                 <!-- Injected via JS -->
@@ -358,107 +473,19 @@
     </header>
 
     <!-- MAIN CONTENT AREA -->
-    <main id="app" style="padding-top: 20px;"></main>
+    <main id="app" style="padding-top: 20px;">
+        <!-- Views will be toggled here -->
+    </main>
 
     <script>
         /**
-         * KALOTSAVAM - PRO SYSTEM
+         * KALOTSAVAM - Premium Arts Fest System
          * 
-         * ARCHITECTURE:
-         * 1. MockDatabase: A class that simulates a MongoDB/SQL backend using LocalStorage.
-         *    - Uses Promises/Async-Await to simulate network latency.
-         *    - Handles "Transactions" like a real API.
-         * 2. State: Manages UI state and connects to the MockDatabase.
-         * 3. Views: Renders HTML.
+         * Architecture: Single Page Application (SPA) with Simulated Database.
+         * Features: Animations, Staggered Loading, State Management.
          */
 
-        // --- 1. THE MOCK BACKEND DATABASE (Not Firebase) ---
-        class MockDatabase {
-            constructor() {
-                this.dbName = 'kalotsavam_db_v2';
-                this.latency = 300; // Simulate network delay (ms)
-            }
-
-            _getDB() {
-                const data = localStorage.getItem(this.dbName);
-                return data ? JSON.parse(data) : { students: [], settings: {} };
-            }
-
-            _saveDB(data) {
-                localStorage.setItem(this.dbName, JSON.stringify(data));
-            }
-
-            async init() {
-                return new Promise(resolve => setTimeout(resolve, 800));
-            }
-
-            // --- AUTH OPERATIONS ---
-            async findUser(regNo) {
-                return new Promise(resolve => {
-                    setTimeout(() => {
-                        const db = this._getDB();
-                        const user = db.students.find(s => s.regNo === regNo);
-                        resolve(user || null);
-                    }, this.latency);
-                });
-            }
-
-            async insertUser(userData) {
-                return new Promise(resolve => {
-                    setTimeout(() => {
-                        const db = this._getDB();
-                        // Check duplicate
-                        if (db.students.find(s => s.regNo === userData.regNo)) {
-                            resolve({ success: false, message: 'User exists' });
-                        }
-                        db.students.push(userData);
-                        this._saveDB(db);
-                        resolve({ success: true });
-                    }, this.latency);
-                });
-            }
-
-            // --- DATA OPERATIONS ---
-            async updateUser(userId, updates) {
-                return new Promise(resolve => {
-                    setTimeout(() => {
-                        const db = this._getDB();
-                        const index = db.students.findIndex(s => s.id === userId);
-                        if (index !== -1) {
-                            db.students[index] = { ...db.students[index], ...updates };
-                            this._saveDB(db);
-                            resolve({ success: true, data: db.students[index] });
-                        } else {
-                            resolve({ success: false });
-                        }
-                    }, this.latency);
-                });
-            }
-
-            async getAllStudents() {
-                return new Promise(resolve => {
-                    setTimeout(() => {
-                        const db = this._getDB();
-                        resolve(db.students);
-                    }, this.latency);
-                });
-            }
-
-            async deleteUser(userId) {
-                return new Promise(resolve => {
-                    setTimeout(() => {
-                        const db = this._getDB();
-                        db.students = db.students.filter(s => s.id !== userId);
-                        this._saveDB(db);
-                        resolve({ success: true });
-                    }, this.latency);
-                });
-            }
-        }
-
-        const db = new MockDatabase();
-
-        // --- 2. CONFIGURATION ---
+        // --- CONFIG & DATA ---
         
         const EVENT_LIST = [
             // MUSIC
@@ -536,14 +563,20 @@
             ADMIN_PASS_HASH: 'simulated_hash_check_only' 
         };
 
-        // --- 3. STATE MANAGEMENT ---
+        // --- BACK BUTTON COMPONENT ---
+        const BACK_BUTTON_HTML = `
+            <button onclick="goHome()" class="back-home-btn">
+                <span>&larr;</span> Return to Lobby
+            </button>
+        `;
+
+        // --- STATE MANAGEMENT ---
         
         const State = {
             currentUser: null, 
             view: 'home', 
             
-            async init() {
-                await db.init(); // Simulate DB connection
+            init: function() {
                 const storedUser = localStorage.getItem('kalotsavam_user');
                 if (storedUser) {
                     this.currentUser = JSON.parse(storedUser);
@@ -553,14 +586,14 @@
                 setTimeout(() => {
                     document.getElementById('loader').style.opacity = '0';
                     setTimeout(() => document.getElementById('loader').remove(), 1000);
-                }, 1200);
+                }, 1800);
 
                 this.render();
             },
 
-            async login(regNo, password) {
-                showToast('Authenticating...', 'normal');
-                const user = await db.findUser(regNo);
+            login: async function(regNo, password) {
+                const students = JSON.parse(localStorage.getItem('kalotsavam_students') || '[]');
+                const user = students.find(s => s.regNo === regNo);
                 
                 if (!user) {
                     showToast('User not found. Please register.', 'error');
@@ -579,25 +612,27 @@
                 }
             },
 
-            async register(userData) {
-                showToast('Creating Account...', 'normal');
+            register: async function(userData) {
+                const students = JSON.parse(localStorage.getItem('kalotsavam_students') || '[]');
+                
+                if (students.find(s => s.regNo === userData.regNo)) {
+                    showToast('Register Number already exists!', 'error');
+                    return;
+                }
+
                 userData.passwordHash = await hashPassword(userData.password);
                 delete userData.password;
                 userData.events = []; 
                 userData.id = Date.now().toString();
-                userData.createdAt = new Date().toISOString();
                 
-                const result = await db.insertUser(userData);
+                students.push(userData);
+                localStorage.setItem('kalotsavam_students', JSON.stringify(students));
                 
-                if (result.success) {
-                    showToast('Registration Successful! Please Login.', 'success');
-                    switchAuthTab('login');
-                } else {
-                    showToast('Register Number already exists!', 'error');
-                }
+                showToast('Registration Successful! Please Login.', 'success');
+                switchAuthTab('login');
             },
 
-            adminLogin(username, password) {
+            adminLogin: function(username, password) {
                 if (username === CONSTANTS.ADMIN_USER && password === 'GPTCpalakkad#123') {
                     this.currentUser = { role: 'admin', name: 'Administrator' };
                     this.view = 'admin-dashboard';
@@ -608,7 +643,7 @@
                 }
             },
 
-            logout() {
+            logout: function() {
                 this.currentUser = null;
                 localStorage.removeItem('kalotsavam_user');
                 this.view = 'home';
@@ -616,16 +651,20 @@
                 this.render();
             },
 
-            goHome() {
+            goHome: function() {
                 this.view = 'home';
                 this.render();
                 window.scrollTo(0, 0);
             },
 
-            async toggleEventSelection(eventId) {
+            toggleEventSelection: function(eventId) {
                 if (!this.currentUser || this.currentUser.role === 'admin') return;
 
-                const user = this.currentUser; // Work on local copy
+                const students = JSON.parse(localStorage.getItem('kalotsavam_students') || '[]');
+                const userIndex = students.findIndex(s => s.id === this.currentUser.id);
+                if (userIndex === -1) return;
+
+                let user = JSON.parse(JSON.stringify(students[userIndex])); 
                 const event = EVENT_LIST.find(e => e.id === eventId);
                 const isSelected = user.events.includes(eventId);
 
@@ -654,75 +693,38 @@
                     showToast(`Removed: ${event.name}`);
                 }
 
-                this.currentUser = user;
-                localStorage.setItem('kalotsavam_user', JSON.stringify(user));
+                this.currentUser.events = user.events;
+                localStorage.setItem('kalotsavam_user', JSON.stringify(this.currentUser));
                 this.render();
             },
 
-            async saveRegistration() {
+            saveRegistration: function() {
                 if (!this.currentUser || this.currentUser.role === 'admin') return;
+
+                const students = JSON.parse(localStorage.getItem('kalotsavam_students') || '[]');
+                const userIndex = students.findIndex(s => s.id === this.currentUser.id);
                 
-                showToast('Saving to Database...', 'normal');
-                const result = await db.updateUser(this.currentUser.id, { events: this.currentUser.events });
-                
-                if (result.success) {
+                if (userIndex !== -1) {
+                    students[userIndex].events = this.currentUser.events;
+                    localStorage.setItem('kalotsavam_students', JSON.stringify(students));
                     showToast('✅ Registrations Saved Successfully!', 'success');
-                    this.currentUser = result.data;
-                    localStorage.setItem('kalotsavam_user', JSON.stringify(this.currentUser));
                     this.render();
                 } else {
-                    showToast('Database Error: Failed to save.', 'error');
+                    showToast('Error saving data.', 'error');
                 }
             },
 
-            async deleteRegistration(userId) {
+            deleteRegistration: function(userId) {
                 if(!confirm("Are you sure you want to delete this student's registration?")) return;
                 
-                showToast('Deleting Record...', 'normal');
-                await db.deleteUser(userId);
+                const students = JSON.parse(localStorage.getItem('kalotsavam_students') || '[]');
+                const newStudents = students.filter(s => s.id !== userId);
+                localStorage.setItem('kalotsavam_students', JSON.stringify(newStudents));
                 showToast('Registration deleted', 'success');
                 this.render();
             },
 
-            // Database Backup Functions
-            backupDatabase() {
-                const dbData = localStorage.getItem(db.dbName);
-                const blob = new Blob([dbData], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `kalotsavam_backup_${new Date().toISOString().slice(0,10)}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                showToast('Database Backup Downloaded', 'success');
-            },
-
-            async restoreDatabase(file) {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = async (e) => {
-                        try {
-                            const data = JSON.parse(e.target.result);
-                            if (data.students && Array.isArray(data.students)) {
-                                localStorage.setItem(db.dbName, JSON.stringify(data));
-                                showToast('Database Restored Successfully', 'success');
-                                this.render();
-                                resolve();
-                            } else {
-                                showToast('Invalid Backup File', 'error');
-                                reject();
-                            }
-                        } catch (err) {
-                            showToast('Error Parsing Backup File', 'error');
-                            reject();
-                        }
-                    };
-                    reader.readAsText(file);
-                });
-            },
-
-            render() {
+            render: function() {
                 const app = document.getElementById('app');
                 const nav = document.getElementById('nav-actions');
                 nav.innerHTML = '';
@@ -760,17 +762,11 @@
             }
         };
 
-        // --- 4. VIEWS COMPONENTS ---
-
-        const BACK_BUTTON_HTML = `
-            <button onclick="goHome()" class="back-home-btn">
-                <span>&larr;</span> Return to Lobby
-            </button>
-        `;
+        // --- VIEWS COMPONENTS ---
 
         const Views = {
             landing: () => `
-                <section style="height: 85vh; display: flex; align-items: center; justify-content: center; text-align: center; flex-direction: column; padding: 2rem;">
+                <section style="height: 85vh; display: flex; align-items: center; justify-content: center; text-align: center; flex-direction: column; padding: 2rem; position: relative;">
                     <div style="position: absolute; width: 100%; height: 100%; top:0; left:0; z-index:-1; overflow:hidden;">
                         <div style="position: absolute; top: 20%; left: 20%; width: 300px; height: 300px; background: var(--color-primary); filter: blur(150px); opacity: 0.15;"></div>
                         <div style="position: absolute; bottom: 20%; right: 20%; width: 400px; height: 400px; background: var(--color-accent); filter: blur(150px); opacity: 0.15;"></div>
@@ -779,7 +775,7 @@
                     <h1 style="font-size: 5rem; margin-bottom: 1rem; color: var(--color-primary); text-shadow: 0 0 40px rgba(212,175,55,0.4); animation: fadeInUp 1s ease-out;">KALOTSAVAM</h1>
                     <h3 style="font-size: 1.8rem; font-weight: 300; margin-bottom: 2rem; color: #fff; letter-spacing: 4px; animation: fadeInUp 1.2s ease-out;">GRAND ARTS FESTIVAL</h3>
                     <p style="max-width: 600px; color: #aaa; line-height: 1.8; margin-bottom: 4rem; font-size: 1.1rem; animation: fadeInUp 1.4s ease-out;">
-                        Powered by a Simulated Local Database Engine. Secure, fast, and private.
+                        Step into the digital spotlight. A premium experience for performers, artists, and dreamers. 
                         Register for stage items, manage your group events, and prepare for the grand celebration of culture.
                     </p>
                     <div class="flex gap-4" style="animation: fadeInUp 1.6s ease-out;">
@@ -835,10 +831,12 @@
                 const singleCount = myEvents.filter(id => EVENT_LIST.find(e => e.id === id).type === 'single').length;
                 const groupCount = myEvents.filter(id => EVENT_LIST.find(e => e.id === id).type === 'group').length;
                 
+                // Generate Grid with Staggered Animation Delay
                 const generateGrid = (filterType, startDelay) => {
                     const events = EVENT_LIST.filter(e => e.type === filterType);
                     return events.map((ev, index) => {
                         const isSelected = myEvents.includes(ev.id);
+                        // Add animation delay based on index
                         const delay = startDelay + (index * 30); 
                         return `
                         <div class="event-card ${isSelected ? 'selected' : ''}" onclick="State.toggleEventSelection('${ev.id}')" style="animation-delay: ${delay}ms">
@@ -884,7 +882,7 @@
                             <button onclick="State.saveRegistration()" class="btn btn-primary w-full mt-4" style="margin-top: 2rem; box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);">
                                 Save Registration
                             </button>
-                            <div class="save-status">Saves to Local Database</div>
+                            <div class="save-status">Lock in your final choices</div>
                         </div>
                     </aside>
 
@@ -892,13 +890,17 @@
                         <div class="event-section">
                             <div class="section-title">Single Items</div>
                             <p class="text-muted mb-4" style="color: #888;">Select up to 4 solo events.</p>
-                            <div class="event-grid">${generateGrid('single', 0)}</div>
+                            <div class="event-grid">
+                                ${generateGrid('single', 0)}
+                            </div>
                         </div>
 
                         <div class="event-section">
                             <div class="section-title">Group Items</div>
                             <p class="text-muted mb-4" style="color: #888;">Select up to 2 group events.</p>
-                            <div class="event-grid">${generateGrid('group', 100)}</div>
+                            <div class="event-grid">
+                                ${generateGrid('group, 100')}
+                            </div>
                         </div>
                     </section>
                 </div>`;
@@ -917,35 +919,51 @@
             `,
 
             adminDashboard: () => {
-                const rows = State.renderAdminTableRows();
+                const students = JSON.parse(localStorage.getItem('kalotsavam_students') || '[]');
+                const totalStudents = students.length;
+                const totalRegistrations = students.reduce((acc, s) => acc + s.events.length, 0);
+                const groupRegs = students.reduce((acc, s) => acc + s.events.filter(id => EVENT_LIST.find(e=>e.id===id).type === 'group').length, 0);
+
+                const rows = students.map(s => `
+                    <tr>
+                        <td style="font-family: monospace; color: var(--color-primary);">${s.regNo}</td>
+                        <td style="color: #fff; font-weight: 600;">${s.name}</td>
+                        <td>${s.dept}</td>
+                        <td>${s.semester}</td>
+                        <td>
+                            ${s.events.length > 0 ? 
+                              s.events.map(eid => {
+                                  const evt = EVENT_LIST.find(x => x.id === eid);
+                                  return `<span style="font-size:0.75rem; background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px; margin-right:4px; border:1px solid rgba(255,255,255,0.1); color: #ccc;">${evt.name}</span>`;
+                              }).join('') 
+                              : '<span style="color:#555; font-style:italic;">None</span>'}
+                        </td>
+                        <td>
+                            <button onclick="State.deleteRegistration('${s.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-weight:bold; transition:0.2s;" onmouseover="this.style.textShadow='0 0 10px red'" onmouseout="this.style.textShadow='none'">✕ DELETE</button>
+                        </td>
+                    </tr>
+                `).join('');
 
                 return `
                 <div class="admin-panel">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 style="color: #fff; text-shadow: 0 0 20px rgba(0,0,0,0.5);">Festival Control Center</h2>
-                        <div class="flex gap-2">
-                            <button onclick="document.getElementById('db-upload').click()" class="btn btn-success" style="font-size: 0.7rem; padding: 0.5rem 1rem;">Restore DB</button>
-                            <input type="file" id="db-upload" class="hidden" accept=".json" onchange="handleDbRestore(this)">
-                            <button onclick="State.backupDatabase()" class="btn btn-primary" style="font-size: 0.7rem; padding: 0.5rem 1rem;">Backup DB</button>
-                        </div>
-                    </div>
+                    <h2 style="color: #fff; text-shadow: 0 0 20px rgba(0,0,0,0.5);">Festival Control Center</h2>
                     
                     <div class="stats-row">
                         <div class="stat-card">
                             <h3>Total Performers</h3>
-                            <div class="val">${rows.length}</div>
+                            <div class="val">${totalStudents}</div>
                         </div>
                         <div class="stat-card">
                             <h3>Total Event Slots</h3>
-                            <div class="val">${rows.reduce((acc, r) => acc + r.eventsCount, 0)}</div>
+                            <div class="val">${totalRegistrations}</div>
                         </div>
                         <div class="stat-card">
                             <h3>Group Items</h3>
-                            <div class="val">${rows.reduce((acc, r) => acc + r.groupCount, 0)}</div>
+                            <div class="val">${groupRegs}</div>
                         </div>
                         <div class="stat-card">
-                            <h3>Database Engine</h3>
-                            <div class="val" style="font-size:1rem; color:var(--color-success); margin-top:15px;">● ONLINE</div>
+                            <h3>System Status</h3>
+                            <div class="val" style="font-size:1rem; color:var(--color-success); margin-top:15px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.4);">● OPERATIONAL</div>
                         </div>
                     </div>
 
@@ -962,49 +980,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${rows.length ? rows.map(r => r.html).join('') : '<tr><td colspan="6" class="text-center" style="color:#666; padding: 2rem;">No registrations found in database.</td></tr>'}
+                                ${rows.length ? rows : '<tr><td colspan="6" class="text-center" style="color:#666; padding: 2rem;">No registrations found in database.</td></tr>'}
                             </tbody>
                         </table>
                     </div>
                 </div>`;
-            },
-            
-            // Helper for Admin Dashboard to get data
-            renderAdminTableRows: async function() {
-                // Since render can't be async, we assume state is updated. 
-                // In a real React app, we'd use useEffect. Here we fetch synchronously for simplicity in this render context
-                // OR we can just read from localStorage directly for the UI render snapshot.
-                const dbData = JSON.parse(localStorage.getItem('kalotsavam_db_v2') || '{"students":[]}');
-                
-                return dbData.students.map(s => {
-                    const evCount = s.events.length;
-                    const groupCount = s.events.filter(id => EVENT_LIST.find(e=>e.id===id).type === 'group').length;
-                    
-                    const eventTags = s.events.map(eid => {
-                        const evt = EVENT_LIST.find(x => x.id === eid);
-                        return `<span style="font-size:0.75rem; background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px; margin-right:4px; border:1px solid rgba(255,255,255,0.1); color: #ccc;">${evt ? evt.name : 'Unknown'}</span>`;
-                    }).join('');
-
-                    return {
-                        eventsCount: evCount,
-                        groupCount: groupCount,
-                        html: `
-                        <tr>
-                            <td style="font-family: monospace; color: var(--color-primary);">${s.regNo}</td>
-                            <td style="color: #fff; font-weight: 600;">${s.name}</td>
-                            <td>${s.dept}</td>
-                            <td>${s.semester}</td>
-                            <td>${eventTags || '<span style="color:#555; font-style:italic;">None</span>'}</td>
-                            <td>
-                                <button onclick="State.deleteRegistration('${s.id}')" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-weight:bold; transition:0.2s;" onmouseover="this.style.textShadow='0 0 10px red'" onmouseout="this.style.textShadow='none'">✕ DELETE</button>
-                            </td>
-                        </tr>`
-                    };
-                });
             }
         };
 
-        // --- 5. UTILS & HANDLERS ---
+        // --- UTILS ---
 
         async function hashPassword(password) {
             const encoder = new TextEncoder();
@@ -1030,13 +1014,17 @@
             }, 3000);
         }
 
+        // --- GLOBAL HANDLERS ---
+
         function navigateTo(view) {
             State.view = view;
             State.render();
             window.scrollTo(0, 0);
         }
 
-        function goHome() { State.goHome(); }
+        function goHome() {
+            State.goHome();
+        }
 
         function switchAuthTab(tab) {
             const loginForm = document.getElementById('form-login');
@@ -1085,13 +1073,7 @@
             State.adminLogin(user, pass);
         }
 
-        function handleDbRestore(input) {
-            if (input.files && input.files[0]) {
-                State.restoreDatabase(input.files[0]);
-            }
-        }
-
-        // --- 6. INITIALIZATION ---
+        // --- BOOTSTRAP ---
         window.addEventListener('DOMContentLoaded', () => {
             State.init();
         });
